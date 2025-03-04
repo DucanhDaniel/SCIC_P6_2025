@@ -53,7 +53,7 @@ python teaching_team.py
 
 ### 6. Start the Streamlit App
 ```sh
-streamlit run app.py
+streamlit run teaching_team.py
 ```
 
 ### 7. Share the App Using Ngrok
