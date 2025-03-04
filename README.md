@@ -1,5 +1,7 @@
 # SCIC P6 2025
 
+This repository is a demo for the product used to participate in the SCIC 2025 - Student Creative Ideas Challenge 2025 of Hanoi University of Science and Technology.
+
 ## How to Use
 
 ### 1. Clone the Repository
@@ -51,12 +53,11 @@ python teaching_team.py
 
 ### 6. Start the Streamlit App
 ```sh
-streamlit run teaching_team.py
+streamlit run app.py
 ```
 
 ### 7. Share the App Using Ngrok
 After running the app, you will get an `ngrok` link. Share this link with others to allow them to access the application remotely.
 
----
 
 
