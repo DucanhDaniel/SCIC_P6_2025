@@ -1,19 +1,62 @@
-### HOW TO USE
-1. clone this repository: https://github.com/DucanhDaniel/SCIC_P6_2025.git
-2. pip install -r ...your path to requirement.txt...
-3. Create your API_KEY:
-  - GOOGLE_API_KEY at https://ai.google.dev/aistudio
-  - COMPOSIO_API_KEY :
-    1. Create an account on Composio Platform
-    2. For you to use the app, you need to make new connection ID with google docs and composio. Follow the below two steps to do so:
-    3. composio add googledocs (IN THE TERMINAL) (You can also create a connection when configure google docs tools in Composio Platform).
-    4. Create a new connection
-    5. Select OAUTH2
-    6. Select Google Account and Done.
-    7. On the composio account website, go to apps, select google docs tool, and click create integration (violet button) and click Try connecting default’s googldocs button and we are done.
-  - NGROK_API_KEY at https://dashboard.ngrok.com/get-started/your-authtoken
-  - SERAPI_API_KEY at https://serpapi.com/
-4. Replace API_KEY with your API key
-5. Run teaching_team.py
-6. Run streamlit command in terminal
-7. You can use ngrok link provided after running the application in your terminal to other people 
+# SCIC P6 2025
+
+## How to Use
+
+### 1. Clone the Repository
+```sh
+git clone https://github.com/DucanhDaniel/SCIC_P6_2025.git
+cd SCIC_P6_2025
+```
+
+### 2. Install Dependencies
+Replace `<your_path_to_requirements.txt>` with the actual path to `requirements.txt`:
+```sh
+pip install -r <your_path_to_requirements.txt>
+```
+
+### 3. Create Your API Keys
+You need the following API keys:
+
+#### Google API Key
+- Get your `GOOGLE_API_KEY` from [Google AI Studio](https://ai.google.dev/aistudio).
+
+#### Composio API Key
+1. Create an account on [Composio Platform](https://composio.io).
+2. To use the app, you need to create a new connection ID with Google Docs and Composio. Follow these steps:
+   ```sh
+   composio add googledocs
+   ```
+3. Create a new connection:
+   - Select **OAUTH2**.
+   - Choose your **Google Account** and confirm.
+4. On the Composio website:
+   - Navigate to **Apps**.
+   - Select **Google Docs Tool**.
+   - Click **Create Integration** (violet button).
+   - Click **Try Connecting Default’s Googledocs**.
+
+#### Ngrok API Key
+- Get your `NGROK_API_KEY` from [Ngrok Dashboard](https://dashboard.ngrok.com/get-started/your-authtoken).
+
+#### SerpAPI Key
+- Get your `SERAPI_API_KEY` from [SerpAPI](https://serpapi.com/).
+
+### 4. Configure API Keys
+Replace placeholder API keys in the code with your actual keys.
+
+### 5. Run the Application
+```sh
+python teaching_team.py
+```
+
+### 6. Start the Streamlit App
+```sh
+streamlit run teaching_team.py
+```
+
+### 7. Share the App Using Ngrok
+After running the app, you will get an `ngrok` link. Share this link with others to allow them to access the application remotely.
+
+---
+
+
