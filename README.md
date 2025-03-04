@@ -6,11 +6,11 @@
   - COMPOSIO_API_KEY :
         + Create an account on Composio Platform
         + For you to use the app, you need to make new connection ID with google docs and composio. Follow the below two steps to do so:
-          + composio add googledocs (IN THE TERMINAL) (You can also create a connection when configure google docs tools in Composio Platform).
-          + Create a new connection
-          + Select OAUTH2
-          + Select Google Account and Done.
-          + On the composio account website, go to apps, select google docs tool, and click create integration (violet button) and click Try connecting default’s googldocs button and we are done.
+          1. composio add googledocs (IN THE TERMINAL) (You can also create a connection when configure google docs tools in Composio Platform).
+          2. Create a new connection
+          3. Select OAUTH2
+          4. Select Google Account and Done.
+          5. On the composio account website, go to apps, select google docs tool, and click create integration (violet button) and click Try connecting default’s googldocs button and we are done.
   - NGROK_API_KEY at https://dashboard.ngrok.com/get-started/your-authtoken
   - SERAPI_API_KEY at https://serpapi.com/
 4. Replace API_KEY with your API key
