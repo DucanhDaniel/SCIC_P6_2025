@@ -1,0 +1,14 @@
+# Bỏ qua file .env chứa API keys
+.env
+
+# Bỏ qua thư mục ảo của Python
+venv/
+__pycache__/
+
+# Bỏ qua file log và dữ liệu tạm
+*.log
+*.sqlite3
+.composio.lock
+
+# Bỏ qua credentials
+credentials.json
