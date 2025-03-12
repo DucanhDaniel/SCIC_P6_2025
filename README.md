@@ -44,8 +44,9 @@ You need the following API keys:
 - Get your `SERAPI_API_KEY` from [SerpAPI](https://serpapi.com/).
 
 ### 4. Configure API Keys
-Replace placeholder API keys in the code with your actual keys.
-
+- Put your API key into file .env 
+- Get credentials.json from Google Cloud Platform: [Tutorial](https://blog.cloud-ace.vn/huong-dan-su-dung-service-account-cua-google-cloud-platform-trong-ung-dung/)
+ 
 ### 5. Run the Application
 ```sh
 python teaching_team.py
