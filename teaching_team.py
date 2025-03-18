@@ -4,7 +4,7 @@ import os
 # from agno.tools.arxiv import ArxivTools
 from agno.utils.pprint import pprint_run_response
 from agno.tools.serpapi import SerpApiTools
-from agno.models.google.gemini import Gemini
+from agno.models.openai import OpenAIChat
 from agno.agent import Agent, RunResponse
 from agno.tools.duckduckgo import DuckDuckGoTools
 from pyngrok import ngrok
@@ -20,7 +20,7 @@ SCOPES = ["https://www.googleapis.com/auth/drive", "https://www.googleapis.com/a
 SERVICE_ACCOUNT_FILE = "credentials.json"
 
 def configure_authorization():
-    os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY", "")
+    os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY", "")
     ngrok.set_auth_token(os.getenv("NGROK_AUTH_TOKEN", ""))
 
     if 'composio_api_key' not in st.session_state:
@@ -56,7 +56,7 @@ def configure_agent(google_docs_tool, serapi_tool):
     professor_agent = Agent(
         name="Professor",
         role="Research and Knowledge Specialist", 
-        model=Gemini(id="gemini-2.0-flash"), 
+        model=OpenAIChat(id='gpt-4o-mini'), 
         tools=[google_docs_tool],
         instructions=[
             "Create a comprehensive knowledge base that covers fundamental concepts, advanced topics, and current developments of the given topic.",
@@ -72,7 +72,7 @@ def configure_agent(google_docs_tool, serapi_tool):
     academic_advisor_agent = Agent(
         name="Academic Advisor",
         role="Learning Path Designer",
-        model=Gemini(id="gemini-2.0-flash"),
+        model=OpenAIChat(id = 'gpt-4o-mini'),
         tools=[google_docs_tool],
         instructions=[
             "Using the knowledge base for the given topic, create a detailed learning roadmap.",
@@ -90,7 +90,7 @@ def configure_agent(google_docs_tool, serapi_tool):
     research_librarian_agent = Agent(
         name="Research Librarian",
         role="Learning Resource Specialist",
-        model=Gemini(id="gemini-2.0-flash"),
+        model=OpenAIChat(id = 'gpt-4o-mini'),
         tools=[google_docs_tool, serapi_tool ],
         # tools = [SerpApiTools(api_key=st.session_state['serpapi_api_key'])],
         instructions=[
@@ -108,7 +108,7 @@ def configure_agent(google_docs_tool, serapi_tool):
     teaching_assistant_agent = Agent(
         name="Teaching Assistant",
         role="Exercise Creator",
-        model=Gemini(id="gemini-1.5-flash"),
+        model=OpenAIChat(id = 'gpt-4o-mini'),
         tools=[google_docs_tool, serapi_tool ],
         instructions=[
             "Create comprehensive practice materials for the given topic.",
@@ -200,7 +200,110 @@ def get_pdf_link(text_content):
 
     return pdf_link
 
+def setup_chatbot():
+    # Initialize chat history in session state if it doesn't exist
+    if 'chat_history' not in st.session_state:
+        st.session_state['chat_history'] = []
+    
+    # Initialize content data in session state if it doesn't exist
+    if 'generated_content' not in st.session_state:
+        st.session_state['generated_content'] = {
+            'professor': None,
+            'advisor': None,
+            'librarian': None,
+            'assistant': None,
+            'topic': None
+        }
+
+#Store generated content
+def store_generated_content(professor_content, advisor_content, librarian_content, assistant_content, topic):
+    st.session_state['generated_content'] = {
+        'professor': professor_content,
+        'advisor': advisor_content,
+        'librarian': librarian_content,
+        'assistant': assistant_content,
+        'topic': topic
+    }
+
+#Create chatbot assitant
+def create_chatbot_agent():
+    chatbot_agent = Agent(
+        name="Teaching Assistant Chatbot",
+        role="Educational Content Expert",
+        model=OpenAIChat(id='gpt-4o-mini'),
+        instructions=[
+            "You are a helpful teaching assistant chatbot that answers questions about the learning content generated.",
+            "Use the information from the Professor, Academic Advisor, Research Librarian, and Teaching Assistant responses to answer questions.",
+            "If you don't know the answer to a question based on the generated content, admit it and suggest what information might be helpful.",
+            "Keep your answers concise but informative.",
+            "Be friendly and encouraging to help users with their learning journey."
+        ],
+        markdown=True,
+    )
+    return chatbot_agent
+
+#Display chatbot and messages interactions
+def display_chatbot(chatbot_agent):
+    st.markdown("## 💬 Teaching Assistant Chatbot")
+    st.markdown("Ask questions about the generated learning content")
+    
+    # Display chat history
+    for message in st.session_state['chat_history']:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+    
+    # Chat input
+    if prompt := st.chat_input("Ask a question about the learning content..."):
+        # Add user message to chat history
+        st.session_state['chat_history'].append({"role": "user", "content": prompt})
+        
+        # Display user message
+        with st.chat_message("user"):
+            st.markdown(prompt)
+            
+        # Generate context for the chatbot
+        content = st.session_state['generated_content']
+        context = f"""
+        Topic: {content['topic']}
+        
+        The following content has been generated about this topic:
+        
+        Professor's Knowledge Base Summary: {content['professor']}
+        
+        Academic Advisor's Learning Roadmap Summary: {content['advisor']}
+        
+        Research Librarian's Resources Summary: {content['librarian']}
+        
+        Teaching Assistant's Practice Materials Summary: {content['assistant']}
+        
+        Please answer the user's question based on this information.
+        """
+        
+        # Get chatbot response
+        with st.chat_message("assistant"):
+            message_placeholder = st.empty()
+            
+            # Use the agent to generate a response
+            response = chatbot_agent.run(
+                f"User question: {prompt}\n\nContext about the topic: {context}",
+                stream=True
+            )
+            
+            full_response = ""
+            for chunk in response:
+                if chunk.content:
+                    full_response += chunk.content
+                    message_placeholder.markdown(full_response + "▌")
+            
+            message_placeholder.markdown(full_response)
+            
+        # Add assistant response to chat history
+        st.session_state['chat_history'].append({"role": "assistant", "content": full_response})
+
+
 def runner(professor_agent, academic_advisor_agent, research_librarian_agent, teaching_assistant_agent):
+    setup_chatbot()
+    chatbot = create_chatbot_agent()
     # Start button
     if st.button("Start"):
         if not st.session_state['topic']:
@@ -234,8 +337,14 @@ def runner(professor_agent, academic_advisor_agent, research_librarian_agent, te
                     stream=False
                 )
                 teaching_assistant_pdf_link = get_pdf_link(teaching_assistant_response.content)
-
-
+            
+            store_generated_content(
+                professor_response.content,
+                academic_advisor_response.content,
+                research_librarian_response.content,
+                teaching_assistant_response.content,
+                st.session_state['topic']
+            )
             
             def extract_google_doc_link(response_content):
                 if response_content is None: 
@@ -243,12 +352,13 @@ def runner(professor_agent, academic_advisor_agent, research_librarian_agent, te
                 if "https://docs.google.com" in response_content:
                     return response_content.split("https://docs.google.com")[1].split()[0].split("/edit")[0].split(")")[0].split("]")[0] + "/edit"
                 return None
-
+            
             professor_doc_link = extract_google_doc_link(professor_response.content)
             academic_advisor_doc_link = extract_google_doc_link(academic_advisor_response.content)
             research_librarian_doc_link = extract_google_doc_link(research_librarian_response.content)
             teaching_assistant_doc_link = extract_google_doc_link(teaching_assistant_response.content)
-
+        
+            
             # Display Google Doc links at the top of the Streamlit UI
             st.markdown("### Google Doc Links:")
             if professor_doc_link:
@@ -288,6 +398,10 @@ def runner(professor_agent, academic_advisor_agent, research_librarian_agent, te
             st.markdown(teaching_assistant_response.content)
             pprint_run_response(teaching_assistant_response, markdown=True)
             st.divider()
+    if st.session_state['generated_content']['topic'] is not None:
+        st.markdown("---")
+        display_chatbot(chatbot)
+
     # Information about the agents
     st.markdown("---")
     st.markdown("### About the Agents:")
