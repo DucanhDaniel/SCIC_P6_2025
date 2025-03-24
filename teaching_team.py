@@ -67,10 +67,11 @@ def configure_agent(google_docs_tool, serapi_tool):
             "Create a comprehensive knowledge base on the given topic, covering: First principles - Explain fundamental concepts for beginners. Key terminology - Define essential terms. Core principles - Cover foundational concepts. Advanced topics - Discuss complex aspects and latest developments.",
             "Ensure the document is well-structured, easy to read, and formatted properly with headings, bullet points, and highlights.",
             "Google Docs Output: Write the full response in a new Google Document. Make it publicly accessible and include the link in your response. Also, copy the full content into your response for immediate access."
-            "Also, copy and paste the full content into your response to ensure users can read it immediately."
+            "Also, copy and paste the full content into your response to ensure users can read it immediately. THE DOCUMENT IS NOT IN MARKDOWN"
         ],
         # show_tool_calls=True,
         markdown=True,
+        reasoning=True
     )
 
     # Create the Academic Advisor agent (formerly RoadmapArchitect)
@@ -90,13 +91,14 @@ def configure_agent(google_docs_tool, serapi_tool):
             "Provide a detailed roadmap that includes all necessary subtopics in the correct sequence to master this topic.",
             "Estimate the time commitment required for each section to give learners a clear expectation.",
             "Present the roadmap in a clear, structured format with proper headings, bullet points, and highlights for readability.",
-            "DON'T FORGET TO CREATE THE GOOGLE DOCUMENT.",
+            "DON'T FORGET TO CREATE THE GOOGLE DOCUMENT. THE DOCUMENT IS NOT IN MARKDOWN",
             "Open a new Google Doc and neatly write the full response with great formatting and structure.",
             "Make the document publicly accessible and **include the Google Doc link in your response.**",
             "Also, copy and paste the full content into your response so the user can read it immediately without opening the Google Doc."
         ],
         # show_tool_calls=True,
-        markdown=True
+        markdown=True,
+        reasoning=True
     )
 
     # Create the Research Librarian agent (formerly ResourceCurator)
@@ -116,13 +118,14 @@ def configure_agent(google_docs_tool, serapi_tool):
             "Use the SerpApi search tool to find up-to-date and relevant learning materials.",
             "Include diverse resources such as technical blogs, GitHub repositories, official documentation, video tutorials, and courses.",
             "Provide a curated list with descriptions and quality assessments for each resource.",
-            "DON'T FORGET TO CREATE THE GOOGLE DOCUMENT.",
+            "DON'T FORGET TO CREATE THE GOOGLE DOCUMENT. THE DOCUMENT IS NOT IN MARKDOWN",
             "Open a new Google Doc and neatly write the full response with great formatting and structure.",
             "Make the document publicly accessible and **include the Google Doc link in your response.**",
             "Also, copy and paste the full content into your response so the user can read it immediately without opening the Google Doc."
         ],
         # show_tool_calls=True,
         markdown=True,
+        reasoning=True
     )
 
     # Create the Teaching Assistant agent (formerly PracticeDesigner)
@@ -143,7 +146,7 @@ def configure_agent(google_docs_tool, serapi_tool):
             "Include progressive exercises, quizzes, hands-on projects, and real-world application scenarios.",
             "Ensure the materials align with the roadmap progression.",
             "Provide detailed solutions and explanations for all practice materials.",
-            "DON'T FORGET TO CREATE THE GOOGLE DOCUMENT.",
+            "DON'T FORGET TO CREATE THE GOOGLE DOCUMENT. THE DOCUMENT IS NOT IN MARKDOWN",
             "Open a new Google Doc and neatly write the full response with great formatting and structure.",
             "Make the document publicly accessible and **include the Google Doc link in your response.**",
             "Also, copy and paste the full content into your response so the user can read it immediately without opening the Google Doc.",
@@ -151,6 +154,7 @@ def configure_agent(google_docs_tool, serapi_tool):
         ],
         # show_tool_calls=True,
         markdown=True,
+        reasoning=True
     )
 
     return professor_agent, academic_advisor_agent, research_librarian_agent, teaching_assistant_agent
